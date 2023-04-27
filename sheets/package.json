@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "dotenv": "^16.0.3",
-    "google-spreadsheet": "^3.3.0"
+    "googleapis": "^118.0.0"
   }
 }

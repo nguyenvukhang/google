@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { GoogleSpreadsheet } = require('google-spreadsheet')
+const { google } = require('googleapis')
 
 /**
  * @param { 'GOOGLE_PRIVATE_KEY_ID'
@@ -15,13 +15,14 @@ function env(name) {
 }
 
 async function main() {
-  const doc = new GoogleSpreadsheet(env('SPREADSHEET_ID'))
-  await doc.useServiceAccountAuth({
-    client_email: env('GOOGLE_CLIENT_EMAIL'),
-    private_key: env('GOOGLE_PRIVATE_KEY'),
+  const auth = new google.auth.GoogleAuth({
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    credentials: {
+      client_email: env('GOOGLE_CLIENT_EMAIL'),
+      private_key: env('GOOGLE_PRIVATE_KEY').replace(/\\n/g, '\n'),
+    },
   })
-  await doc.loadInfo()
-  await doc.updateProperties({ title: 'renamed spreadsheet!' })
+  const sheets = google.sheets({ version: 'v4', auth })
 }
 
 main()
